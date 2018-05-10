@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Intern</string>
+    <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="sign_in_with_facebook">Sign in with Facebook</string>
+    <string name="facebook_app_id">236308350254539</string>
+    <string name="fb_login_protocol_scheme">fb236308350254539</string>
+    <string name="credentials"><![CDATA[CREDENTIALS & HIGHLIGHT]]></string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
