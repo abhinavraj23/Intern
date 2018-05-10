@@ -179,7 +179,7 @@ public class FragmentThree extends Fragment {
                                 Email.setText("");
                                 Name.setText("");
                                 FirebaseAuth.getInstance().signOut();
-                                
+
                                 /*signout.setVisibility(View.INVISIBLE);
                                 google_signin.setVisibility(View.VISIBLE);
                                 facebook_signin.setVisibility(View.VISIBLE);*/
