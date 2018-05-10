@@ -55,6 +55,8 @@ public class FragmentThree extends Fragment {
     private FirebaseAuth mAuth;
     private static String TAG = "TAG";
     Button signout;
+    TextView Name;
+    TextView Email;
     SignInButton google_signin;
     LoginButton facebook_signin;
     GoogleApiClient mGoogleApiClient;
@@ -76,7 +78,7 @@ public class FragmentThree extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_three, container, false);
+        final View view = inflater.inflate(R.layout.fragment_three, container, false);
         TextView email = (TextView) view.findViewById(R.id.email);
         GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(getActivity());
         ImageView profileImg = (ImageView) view.findViewById(R.id.profile_img);
@@ -156,6 +158,8 @@ public class FragmentThree extends Fragment {
         });
 
 
+
+
         signout = (Button) view.findViewById(R.id.signout_button);
         google_signin = (SignInButton) view.findViewById(R.id.googleBtn1);
         facebook_signin = (LoginButton) view.findViewById(R.id.login_button1);
@@ -168,9 +172,20 @@ public class FragmentThree extends Fragment {
                             @Override
                             public void onResult(Status status) {
                                 Toast.makeText(getContext(),"Logged Out",Toast.LENGTH_SHORT).show();
-                                signout.setVisibility(View.INVISIBLE);
+                                Name = (TextView) view.findViewById(R.id.name);
+                                Email = (TextView) view.findViewById(R.id.email);
+                                Email.setHint("Email address");
+                                Name.setHint("Person Name");
+                                Email.setText("");
+                                Name.setText("");
+                                FirebaseAuth.getInstance().signOut();
+                                
+                                /*signout.setVisibility(View.INVISIBLE);
                                 google_signin.setVisibility(View.VISIBLE);
-                                facebook_signin.setVisibility(View.VISIBLE);
+                                facebook_signin.setVisibility(View.VISIBLE);*/
+                                Intent i = new Intent(getActivity(), LoginActivity.class);
+                                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(i);
                             }
                         });
             }
