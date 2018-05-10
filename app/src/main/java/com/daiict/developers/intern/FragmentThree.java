@@ -22,6 +22,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
 import java.util.Arrays;
@@ -66,12 +67,48 @@ public class FragmentThree extends Fragment {
             name.setText(upperStringFname + " " + upperStringLname);
             email.setText(personEmail);
         }
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            // Name, email address, and profile photo Url
+            String personName = user.getDisplayName();
+            //String personGivenName = user.getGivenName();
+            //String personFamilyName = user.getFamilyName();
+            String personEmail = user.getEmail();
+            //String personId = user.getId();
+            Uri personPhoto = user.getPhotoUrl();
+            Picasso.with(getContext()).load(personPhoto).into(profileImg);
+            String upperStringFname = personName.substring(0, 1).toUpperCase() + personName.substring(1);
+            //String upperStringLname = personFamilyName.substring(0, 1).toUpperCase() + personFamilyName.substring(1);
+            name.setText(upperStringFname);
+            email.setText(personEmail);
+
+            // Check if user's email is verified
+            boolean emailVerified = user.isEmailVerified();
+
+            // The user's ID, unique to the Firebase project. Do NOT use this value to
+            // authenticate with your backend server, if you have one. Use
+            // FirebaseUser.getIdToken() instead.
+            String uid = user.getUid();
+        }
+
         signout = (Button) view.findViewById(R.id.signout_button);
         signout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
-                        new ResultCallback<Status>() {
+                Toast.makeText(getContext(),"Logged Out",Toast.LENGTH_SHORT).show();
+                Name = (TextView) view.findViewById(R.id.name);
+                Email = (TextView) view.findViewById(R.id.email);
+                Email.setHint("Email address");
+                Name.setHint("Person Name");
+                Email.setText("");
+                Name.setText("");
+                FirebaseAuth.getInstance().signOut();
+                Intent i = new Intent(getActivity(), LoginActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(i);
+                //Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                        /*new ResultCallback<Status>() {
                             @Override
                             public void onResult(Status status) {
                                 Toast.makeText(getContext(),"Logged Out",Toast.LENGTH_SHORT).show();
@@ -82,15 +119,11 @@ public class FragmentThree extends Fragment {
                                 Email.setText("");
                                 Name.setText("");
                                 FirebaseAuth.getInstance().signOut();
-
-                                /*signout.setVisibility(View.INVISIBLE);
-                                google_signin.setVisibility(View.VISIBLE);
-                                facebook_signin.setVisibility(View.VISIBLE);*/
                                 Intent i = new Intent(getActivity(), LoginActivity.class);
                                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(i);
                             }
-                        });
+                        };*/
             }
         });
         return view;
