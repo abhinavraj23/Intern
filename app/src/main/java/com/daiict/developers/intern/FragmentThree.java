@@ -23,6 +23,8 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
 import java.util.Arrays;
@@ -33,9 +35,14 @@ public class FragmentThree extends Fragment {
         // Required empty public constructor
     }
 
+    private DatabaseReference mDataBase;
+
+
     Button signout;
     TextView Name;
     TextView Email;
+    String username, useremail, userID;
+    static int userId = 0;
     GoogleApiClient mGoogleApiClient;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,6 +73,14 @@ public class FragmentThree extends Fragment {
             String upperStringLname = personFamilyName.substring(0, 1).toUpperCase() + personFamilyName.substring(1);
             name.setText(upperStringFname + " " + upperStringLname);
             email.setText(personEmail);
+
+
+            /*mDataBase = FirebaseDatabase.getInstance().getReference();
+
+           DatabaseReference mDataBaseChildN =  mDataBase.child("Users").push();
+           mDataBaseChildN.child("Name").setValue(personName);
+           //DatabaseReference mDataBaseChildE = mDataBase.child("Users").child(userID).child("Email");
+           mDataBaseChildN.child("Email").setValue(personEmail);*/
         }
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
