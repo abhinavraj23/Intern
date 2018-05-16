@@ -42,12 +42,18 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.util.Arrays;
+import com.crashlytics.android.Crashlytics;
+import com.google.firebase.database.ValueEventListener;
 
+import User.User;
+import io.fabric.sdk.android.Fabric;
 public class LoginActivity extends AppCompatActivity {
     private static int RC_SIGN_IN = 1;
     private static String TAG = "TAG";
@@ -59,14 +65,14 @@ public class LoginActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private static final String EMAIL = "email";
    CallbackManager callbackManager;
-
-
+    int countr=0;
 
     private String userId, name, email;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        Fabric.with(this, new Crashlytics());
 
         mAuth = FirebaseAuth.getInstance();
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -233,7 +239,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
+                            final FirebaseUser user = mAuth.getCurrentUser();
 
                             String personName = user.getDisplayName();
                             String personEmail = user.getEmail();
@@ -241,11 +247,54 @@ public class LoginActivity extends AppCompatActivity {
 
                             mDataBase = FirebaseDatabase.getInstance().getReference();
 
-                            DatabaseReference mDataBaseChildN = mDataBase.child("Users").push();
-                            mDataBaseChildN.child("Name").setValue(personName);
-                            //DatabaseReference mDataBaseChildE = mDataBase.child("Users").child(userID).child("Email");
-                            mDataBaseChildN.child("Email").setValue(personEmail);
+                            DatabaseReference Child = mDataBase.child("Users");
 
+
+                            // Checking database
+
+                            Child.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    for(DataSnapshot data : dataSnapshot.getChildren()){
+
+                                        if(data.child("Email").getValue() == (user.getEmail())){
+                                            countr++;
+                                            //Toast.makeText(LoginActivity.this,"Already a User", Toast.LENGTH_SHORT).show();
+                                        }
+                                        /*if(!(data.child("Email").getValue().equals(user.getEmail()))){
+                                            DatabaseReference mDataBaseChildN = mDataBase.child("Users").push();
+                                            mDataBaseChildN.child("Name").setValue(user.getDisplayName());
+                                            //DatabaseReference mDataBaseChildE = mDataBase.child("Users").child(userID).child("Email");
+                                            mDataBaseChildN.child("Email").setValue(user.getEmail());
+                                        }*/
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+
+                            if(countr == 0){
+                                DatabaseReference mDataBaseChildN = mDataBase.child("Users").push();
+                                mDataBaseChildN.child("Name").setValue(user.getDisplayName());
+                                //DatabaseReference mDataBaseChildE = mDataBase.child("Users").child(userID).child("Email");
+                                mDataBaseChildN.child("Email").setValue(user.getEmail());
+
+                            }
+                            else{
+                                Toast.makeText(LoginActivity.this,"Already a User", Toast.LENGTH_SHORT).show();
+                            }
+
+
+
+                            //DatabaseReference childDataBase = mDataBase.child("Users");
+
+                                /*DatabaseReference mDataBaseChildN = mDataBase.child("Users").push();
+                                mDataBaseChildN.child("Name").setValue(personName);
+                                //DatabaseReference mDataBaseChildE = mDataBase.child("Users").child(userID).child("Email");
+                                mDataBaseChildN.child("Email").setValue(personEmail);*/
 
 
                         } else {
@@ -257,5 +306,6 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
     }
+
 
 }
