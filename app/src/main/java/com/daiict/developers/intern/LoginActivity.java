@@ -49,11 +49,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.util.Arrays;
-import com.crashlytics.android.Crashlytics;
+import java.util.HashMap;
+
 import com.google.firebase.database.ValueEventListener;
 
-import User.User;
-import io.fabric.sdk.android.Fabric;
 public class LoginActivity extends AppCompatActivity {
     private static int RC_SIGN_IN = 1;
     private static String TAG = "TAG";
@@ -65,14 +64,12 @@ public class LoginActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private static final String EMAIL = "email";
    CallbackManager callbackManager;
-    int countr=0;
 
     private String userId, name, email;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        Fabric.with(this, new Crashlytics());
 
         mAuth = FirebaseAuth.getInstance();
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -243,16 +240,45 @@ public class LoginActivity extends AppCompatActivity {
 
                             String personName = user.getDisplayName();
                             String personEmail = user.getEmail();
-
+                            final boolean[] exists = {false};
 
                             mDataBase = FirebaseDatabase.getInstance().getReference();
 
-                            DatabaseReference Child = mDataBase.child("Users");
+                            final DatabaseReference mRef = mDataBase.child("Users");
+                            mRef.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    for(DataSnapshot data : dataSnapshot.getChildren()){
+                                        if((data.child("Email").exists()) && (data.child("Email").getValue().equals(user.getEmail()))){
+                                            exists[0]=true;
+                                        }
+                                    }
+                                    if(!exists[0]) {
+                                        HashMap<String, String> datamap = new HashMap<>();
+                                        datamap.put("Name", user.getDisplayName());
+                                        datamap.put("Email", user.getEmail());
+                                        DatabaseReference userData = mRef.push();
+                                        userData.setValue(datamap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if(!task.isSuccessful()){
+                                                    Toast.makeText(LoginActivity.this,"Error occured", Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        });
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
 
 
                             // Checking database
 
-                            Child.addListenerForSingleValueEvent(new ValueEventListener() {
+                        /*    Child.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     for(DataSnapshot data : dataSnapshot.getChildren()){
@@ -267,25 +293,15 @@ public class LoginActivity extends AppCompatActivity {
                                             //DatabaseReference mDataBaseChildE = mDataBase.child("Users").child(userID).child("Email");
                                             mDataBaseChildN.child("Email").setValue(user.getEmail());
                                         }*/
-                                    }
-                                }
-
+                             //       }
+                            //    }
+                        /*
                                 @Override
                                 public void onCancelled(DatabaseError databaseError) {
 
                                 }
                             });
-
-                            if(countr == 0){
-                                DatabaseReference mDataBaseChildN = mDataBase.child("Users").push();
-                                mDataBaseChildN.child("Name").setValue(user.getDisplayName());
-                                //DatabaseReference mDataBaseChildE = mDataBase.child("Users").child(userID).child("Email");
-                                mDataBaseChildN.child("Email").setValue(user.getEmail());
-
-                            }
-                            else{
-                                Toast.makeText(LoginActivity.this,"Already a User", Toast.LENGTH_SHORT).show();
-                            }
+                            */
 
 
 
