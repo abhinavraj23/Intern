@@ -208,9 +208,6 @@ public class LoginActivity extends AppCompatActivity {
         {
             GoogleSignInAccount acct = result.getSignInAccount();
             Toast.makeText(getApplicationContext(),""+acct.getDisplayName(),Toast.LENGTH_LONG).show();
-
-            //mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
-            //updateUI(true);
         } else {
             Toast.makeText(this, "Login Failed", Toast.LENGTH_LONG).show();
         }
@@ -252,7 +249,7 @@ public class LoginActivity extends AppCompatActivity {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if(!task.isSuccessful()){
-                                                    Toast.makeText(LoginActivity.this,"Error occured", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(LoginActivity.this,"Error occurred", Toast.LENGTH_SHORT).show();
                                                 }
                                             }
                                         });
@@ -264,43 +261,6 @@ public class LoginActivity extends AppCompatActivity {
 
                                 }
                             });
-
-
-                            // Checking database
-
-                        /*    Child.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    for(DataSnapshot data : dataSnapshot.getChildren()){
-
-                                        if(data.child("Email").getValue() == (user.getEmail())){
-                                            countr++;
-                                            //Toast.makeText(LoginActivity.this,"Already a User", Toast.LENGTH_SHORT).show();
-                                        }
-                                        /*if(!(data.child("Email").getValue().equals(user.getEmail()))){
-                                            DatabaseReference mDataBaseChildN = mDataBase.child("Users").push();
-                                            mDataBaseChildN.child("Name").setValue(user.getDisplayName());
-                                            //DatabaseReference mDataBaseChildE = mDataBase.child("Users").child(userID).child("Email");
-                                            mDataBaseChildN.child("Email").setValue(user.getEmail());
-                                        }*/
-                             //       }
-                            //    }
-                        /*
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-                            });
-                            */
-
-
-
-                            //DatabaseReference childDataBase = mDataBase.child("Users");
-
-                                /*DatabaseReference mDataBaseChildN = mDataBase.child("Users").push();
-                                mDataBaseChildN.child("Name").setValue(personName);
-                                //DatabaseReference mDataBaseChildE = mDataBase.child("Users").child(userID).child("Email");
-                                mDataBaseChildN.child("Email").setValue(personEmail);*/
 
 
                         } else {
