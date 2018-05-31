@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
@@ -39,18 +40,30 @@ public class FragmentThree extends Fragment {
 
 
     Button signout;
+    private GoogleApiClient mGoogleApi;
+
     TextView Name;
     TextView Email;
     String username, useremail, userID;
     static int userId = 0;
-    GoogleApiClient mGoogleApiClient;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail().build();
+        mGoogleApi = new GoogleApiClient.Builder(getActivity()).addApi(Auth.GOOGLE_SIGN_IN_API,gso).build();
+        mGoogleApi.connect();
+
     }
     ViewPager viewPager;
     TabLayout tabLayout;
+
+    @Override
+    public void onStart() {
+        mGoogleApi.connect();
+        super.onStart();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -61,6 +74,8 @@ public class FragmentThree extends Fragment {
         GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(getActivity());
         ImageView profileImg = (ImageView) view.findViewById(R.id.profile_img);
         TextView name = (TextView) view.findViewById(R.id.name);
+
+
         if (acct != null) {
             String personName = acct.getDisplayName();
             String personGivenName = acct.getGivenName();
@@ -112,33 +127,24 @@ public class FragmentThree extends Fragment {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getContext(),"Logged Out",Toast.LENGTH_SHORT).show();
-                Name = (TextView) view.findViewById(R.id.name);
-                Email = (TextView) view.findViewById(R.id.email);
-                Email.setHint("Email address");
-                Name.setHint("Person Name");
-                Email.setText("");
-                Name.setText("");
                 FirebaseAuth.getInstance().signOut();
-                Intent i = new Intent(getActivity(), LoginActivity.class);
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(i);
-                //Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
-                        /*new ResultCallback<Status>() {
+                Auth.GoogleSignInApi.signOut(mGoogleApi).setResultCallback(
+                        new ResultCallback<Status>() {
                             @Override
                             public void onResult(Status status) {
-                                Toast.makeText(getContext(),"Logged Out",Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(getContext(),"Logged Out",Toast.LENGTH_SHORT).show();
                                 Name = (TextView) view.findViewById(R.id.name);
                                 Email = (TextView) view.findViewById(R.id.email);
                                 Email.setHint("Email address");
                                 Name.setHint("Person Name");
                                 Email.setText("");
                                 Name.setText("");
-                                FirebaseAuth.getInstance().signOut();
+                                //FirebaseAuth.getInstance().signOut();
                                 Intent i = new Intent(getActivity(), LoginActivity.class);
                                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(i);
                             }
-                        };*/
+                        });
             }
         });
         return view;

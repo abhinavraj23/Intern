@@ -48,4 +48,3 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.android.application'
 // Put Fabric plugin after Android plugin
 apply plugin: 'io.fabric'
-

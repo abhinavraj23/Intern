@@ -19,6 +19,7 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
@@ -45,6 +46,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivity extends AppCompatActivity {
     private static int RC_SIGN_IN = 1;
+    private static int count = 0;
     private static String TAG = "TAG";
     private FirebaseAuth mAuth;
     private SignInButton mGoogleBtn;
@@ -79,10 +81,16 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if (firebaseAuth.getCurrentUser() != null) {
-
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
+                    if(count != 0){
+                        Intent i = new Intent(LoginActivity.this, Main2Activity.class);
+                        startActivity(i);
+                        finish();
+                    }
+                    else {
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
                 }
             }
         };
@@ -95,6 +103,7 @@ public class LoginActivity extends AppCompatActivity {
                 })
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
+
 
         // Facebook Code Begins
         callbackManager = CallbackManager.Factory.create();
@@ -209,8 +218,6 @@ public class LoginActivity extends AppCompatActivity {
             GoogleSignInAccount acct = result.getSignInAccount();
             Toast.makeText(getApplicationContext(),""+acct.getDisplayName(),Toast.LENGTH_LONG).show();
 
-            //mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
-            //updateUI(true);
         } else {
             Toast.makeText(this, "Login Failed", Toast.LENGTH_LONG).show();
         }
@@ -244,6 +251,7 @@ public class LoginActivity extends AppCompatActivity {
                                         }
                                     }
                                     if(!exists[0]) {
+                                        count++;
                                         HashMap<String, String> datamap = new HashMap<>();
                                         datamap.put("Name", user.getDisplayName());
                                         datamap.put("Email", user.getEmail());
@@ -264,45 +272,6 @@ public class LoginActivity extends AppCompatActivity {
 
                                 }
                             });
-
-
-                            // Checking database
-
-                        /*    Child.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    for(DataSnapshot data : dataSnapshot.getChildren()){
-
-                                        if(data.child("Email").getValue() == (user.getEmail())){
-                                            countr++;
-                                            //Toast.makeText(LoginActivity.this,"Already a User", Toast.LENGTH_SHORT).show();
-                                        }
-                                        /*if(!(data.child("Email").getValue().equals(user.getEmail()))){
-                                            DatabaseReference mDataBaseChildN = mDataBase.child("Users").push();
-                                            mDataBaseChildN.child("Name").setValue(user.getDisplayName());
-                                            //DatabaseReference mDataBaseChildE = mDataBase.child("Users").child(userID).child("Email");
-                                            mDataBaseChildN.child("Email").setValue(user.getEmail());
-                                        }*/
-                             //       }
-                            //    }
-                        /*
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-                            });
-                            */
-
-
-
-                            //DatabaseReference childDataBase = mDataBase.child("Users");
-
-                                /*DatabaseReference mDataBaseChildN = mDataBase.child("Users").push();
-                                mDataBaseChildN.child("Name").setValue(personName);
-                                //DatabaseReference mDataBaseChildE = mDataBase.child("Users").child(userID).child("Email");
-                                mDataBaseChildN.child("Email").setValue(personEmail);*/
-
-
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -312,6 +281,4 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
     }
-
-
 }
