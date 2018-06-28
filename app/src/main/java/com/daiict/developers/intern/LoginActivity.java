@@ -46,7 +46,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivity extends AppCompatActivity {
     private static int RC_SIGN_IN = 1;
-    private static int count = 0;
+    //private static int count = 0;
     private static String TAG = "TAG";
     private FirebaseAuth mAuth;
     private SignInButton mGoogleBtn;
@@ -80,18 +80,12 @@ public class LoginActivity extends AppCompatActivity {
         mAuthListner = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if (firebaseAuth.getCurrentUser() != null) {
-                    if(count != 0){
-                        Intent i = new Intent(LoginActivity.this, Main2Activity.class);
-                        startActivity(i);
-                        finish();
-                    }
-                    else {
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                if (firebaseAuth.getCurrentUser() != null)
+                    {
+                        Intent intent = new Intent(LoginActivity.this, Home_Activity.class);
                         startActivity(intent);
                         finish();
                     }
-                }
             }
         };
         mGoogleApi = new GoogleApiClient.Builder(getApplicationContext())
@@ -251,7 +245,6 @@ public class LoginActivity extends AppCompatActivity {
                                         }
                                     }
                                     if(!exists[0]) {
-                                        count++;
                                         HashMap<String, String> datamap = new HashMap<>();
                                         datamap.put("Name", user.getDisplayName());
                                         datamap.put("Email", user.getEmail());
