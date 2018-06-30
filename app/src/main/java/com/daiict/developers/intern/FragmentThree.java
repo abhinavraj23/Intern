@@ -72,7 +72,7 @@ public class FragmentThree extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_three, container, false);
         TextView email = (TextView) view.findViewById(R.id.email);
         GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(getActivity());
-        ImageView profileImg = (ImageView) view.findViewById(R.id.profile_img);
+        ImageView profileImg = view.findViewById(R.id.profile_img);
         TextView name = (TextView) view.findViewById(R.id.name);
 
 
@@ -88,14 +88,6 @@ public class FragmentThree extends Fragment {
             String upperStringLname = personFamilyName.substring(0, 1).toUpperCase() + personFamilyName.substring(1);
             name.setText(upperStringFname + " " + upperStringLname);
             email.setText(personEmail);
-
-
-            /*mDataBase = FirebaseDatabase.getInstance().getReference();
-
-           DatabaseReference mDataBaseChildN =  mDataBase.child("Users").push();
-           mDataBaseChildN.child("Name").setValue(personName);
-           //DatabaseReference mDataBaseChildE = mDataBase.child("Users").child(userID).child("Email");
-           mDataBaseChildN.child("Email").setValue(personEmail);*/
         }
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
