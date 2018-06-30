@@ -25,7 +25,8 @@
             android:name="io.fabric.ApiKey"
             android:value="b724b3db12a8f7b5aa62646fd3c9485548e35d21" />
 
-        <activity android:name=".MainActivity" />
+        <activity android:name=".MainActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -67,7 +68,6 @@
                     </intent-filter>
                 </activity>
         -->
-        <activity android:name=".Main2Activity"></activity>
     </application>
 
 </manifest>
