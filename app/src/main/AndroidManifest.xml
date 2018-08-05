@@ -13,13 +13,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".LoginActivity"
-            android:theme="@style/Theme.Design.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:theme="@style/Theme.Design.NoActionBar"></activity>
 
         <meta-data
             android:name="io.fabric.ApiKey"
@@ -50,8 +44,16 @@
         <activity android:name=".Main2Activity" />
         <activity
             android:name=".Home_Activity"
-            android:theme="@style/Theme.AppCompat.NoActionBar">
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity android:name=".LoginActivity1">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
+        <activity android:name=".LoginActivity2" />
+        <activity android:name=".SignUpActivity"></activity>
     </application>
 
 </manifest>

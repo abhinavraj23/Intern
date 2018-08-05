@@ -104,7 +104,7 @@ public class Home_Activity extends AppCompatActivity implements NavigationView.O
                         new ResultCallback<Status>() {
                             @Override
                             public void onResult(Status status) {
-                                Intent i = new Intent(Home_Activity.this, LoginActivity.class);
+                                Intent i = new Intent(Home_Activity.this, LoginActivity1.class);
                                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(i);
                             }
